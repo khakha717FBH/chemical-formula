@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>بناء الصيغ الكيميائية الأيونية | مختبر فؤاد التعليمي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-900:#131c30;
+    --navy-800:#1B2640;
+    --navy-700:#233258;
+    --teal:#14C8A8;
+    --teal-dim:rgba(20,200,168,.18);
+    --coral:#ff6b4a;
+    --text-light:#eef2f7;
+    --text-dim:#93a3bf;
+    --danger:#ff6b6b;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:radial-gradient(circle at 50% 0%, var(--navy-700), var(--navy-900) 70%);
+    font-family:'Cairo', sans-serif;
+    color:var(--text-light);
+    min-height:100dvh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:clamp(8px,2vw,20px);
+  }
+  #app{
+    width:min(920px, 100%);
+  }
+  .panel-viewport{
+    height:clamp(560px, 92dvh, 880px);
+    overflow-y:auto;
+    overflow-x:hidden;
+    border-radius:20px;
+    background:linear-gradient(180deg, var(--navy-800), var(--navy-900));
+    border:1px solid rgba(255,255,255,.06);
+    box-shadow:0 20px 60px rgba(0,0,0,.4);
+    display:flex;
+    flex-direction:column;
+    scrollbar-width:thin;
+    scrollbar-color:var(--teal) transparent;
+  }
+  .panel-viewport::-webkit-scrollbar{width:6px;}
+  .panel-viewport::-webkit-scrollbar-thumb{background:var(--teal); border-radius:10px;}
+
+  header{
+    padding:clamp(14px,2vw,22px) clamp(16px,3vw,28px);
+    border-bottom:1px solid rgba(255,255,255,.07);
+    position:sticky; top:0; z-index:20;
+    background:linear-gradient(180deg, var(--navy-800) 80%, transparent);
+    backdrop-filter:blur(6px);
+  }
+  .utility-bar{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    flex-wrap:wrap; margin-bottom:12px; padding-bottom:12px;
+    border-bottom:1px solid rgba(255,255,255,.06);
+  }
+  .brand-mark{
+    display:flex; align-items:center; gap:6px; font-size:12.5px; font-weight:800;
+    color:var(--text-dim); white-space:nowrap;
+  }
+  .brand-mark b{color:var(--teal); font-weight:800;}
+  .lesson-return{
+    display:inline-flex; align-items:center; gap:6px;
+    border:1.5px solid rgba(255,255,255,.2); color:var(--text-dim);
+    font-family:inherit; font-weight:700; font-size:12.5px; text-decoration:none;
+    padding:6px 14px; border-radius:999px; transition:all .2s ease; white-space:nowrap;
+  }
+  .lesson-return:hover{border-color:var(--teal); color:var(--teal); background:var(--teal-dim);}
+
+  .title-row{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;}
+  h1{font-size:clamp(15px,2.2vw,19px); font-weight:800; margin:0; letter-spacing:.2px;}
+  .xp-badge{
+    display:flex; align-items:center; gap:6px;
+    background:var(--teal-dim); border:1px solid rgba(20,200,168,.4);
+    color:var(--teal); font-weight:700; font-size:13px;
+    padding:5px 12px; border-radius:999px; white-space:nowrap;
+  }
+  .steps{display:flex; gap:6px; margin-top:12px;}
+  .step-dot{
+    flex:1; height:6px; border-radius:99px; background:rgba(255,255,255,.08);
+    overflow:hidden; position:relative;
+  }
+  .step-dot i{
+    position:absolute; inset:0; background:var(--teal); border-radius:99px;
+    transform:scaleX(0); transform-origin:right; transition:transform .5s ease;
+  }
+  .step-dot.done i{transform:scaleX(1);}
+  .step-dot.current i{transform:scaleX(.55);}
+
+  main{
+    flex:1; padding:clamp(16px,3vw,30px);
+    display:flex; flex-direction:column; gap:18px;
+  }
+  .stage-label{
+    color:var(--teal); font-weight:700; font-size:13px; letter-spacing:.3px;
+  }
+  .stage-title{font-size:clamp(17px,2.6vw,22px); font-weight:800; margin:2px 0 4px;}
+  .stage-desc{color:var(--text-dim); font-size:clamp(13px,1.8vw,14.5px); line-height:1.8; max-width:60ch;}
+
+  .btn{
+    appearance:none; border:1.5px solid var(--teal); background:transparent;
+    color:var(--teal); font-family:inherit; font-weight:700; font-size:14px;
+    padding:10px 22px; border-radius:999px; cursor:pointer;
+    transition:all .2s ease;
+  }
+  .btn:hover:not(:disabled){background:var(--teal); color:var(--navy-900); box-shadow:0 0 22px rgba(20,200,168,.45);}
+  .btn:disabled{opacity:.35; cursor:not-allowed;}
+  .btn.secondary{border-color:rgba(255,255,255,.25); color:var(--text-dim);}
+  .btn.secondary:hover{background:rgba(255,255,255,.08); color:var(--text-light); box-shadow:none;}
+
+  .footer-nav{
+    padding:14px clamp(16px,3vw,28px); border-top:1px solid rgba(255,255,255,.07);
+    display:flex; justify-content:space-between; align-items:center; gap:10px;
+    position:sticky; bottom:0; background:linear-gradient(0deg, var(--navy-900) 80%, transparent);
+  }
+
+  /* ---------- Element cards (stage 1) ---------- */
+  .element-grid{display:flex; gap:14px; flex-wrap:wrap; justify-content:center; margin-top:6px;}
+  .el-card{
+    width:96px; height:96px; border-radius:16px;
+    background:var(--navy-700); border:2px solid rgba(255,255,255,.08);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    cursor:pointer; user-select:none; transition:all .2s ease; position:relative;
+  }
+  .el-card:hover{border-color:var(--teal); transform:translateY(-2px);}
+  .el-card.selected{border-color:var(--teal); background:var(--teal-dim); box-shadow:0 0 20px rgba(20,200,168,.3);}
+  .el-card .sym{font-size:26px; font-weight:800;}
+  .el-card .nm{font-size:11px; color:var(--text-dim); margin-top:4px;}
+  .el-card .z{position:absolute; top:6px; inset-inline-start:8px; font-size:10px; color:var(--text-dim);}
+
+  .invalid-msg{
+    background:rgba(255,107,74,.12); border:1px solid rgba(255,107,74,.4);
+    color:#ffb3a0; border-radius:12px; padding:12px 16px; font-size:13.5px; line-height:1.8;
+    max-width:56ch; margin:4px auto 0; text-align:center;
+  }
+
+  /* ---------- Atom / shell diagram (stage 2) ---------- */
+  .atoms-row{display:flex; flex-direction:row-reverse; gap:22px; justify-content:center; flex-wrap:wrap; margin-top:6px;}
+  .atom-box{
+    background:var(--navy-700); border-radius:16px; padding:14px;
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+    width:min(260px, 100%);
+  }
+  .atom-box h3{margin:0; font-size:14px; color:var(--teal);}
+  svg.shell-svg{width:190px; height:190px;}
+  .shell-ring{fill:none; stroke:rgba(255,255,255,.15); stroke-width:1.5; transition:stroke .3s;}
+  .shell-ring.ready{stroke:rgba(20,200,168,.5);}
+  .shell-ring.full{stroke:var(--teal); stroke-width:2;}
+  .e-dot{fill:var(--teal); transform-box:fill-box; transform-origin:center; animation:eDotIn .25s ease;}
+  .e-dot.valence{fill:var(--coral);}
+  @keyframes eDotIn{from{transform:scale(0);} to{transform:scale(1);}}
+  .nucleus-label{fill:var(--text-light); font-size:13px; font-weight:800; font-family:'Cairo',sans-serif;}
+
+  .pool{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; max-width:230px; min-height:26px;}
+  .electron{
+    width:22px; height:22px; border-radius:50%; background:var(--teal);
+    cursor:pointer; box-shadow:0 0 6px rgba(20,200,168,.6);
+    transition:transform .12s ease;
+  }
+  .electron:active{transform:scale(.8);}
+  .shell-hint{font-size:11.5px; color:var(--text-dim); min-height:16px;}
+  .valence-note{font-size:12px; color:var(--coral); font-weight:700; min-height:16px;}
+
+  /* ---------- Ion assignment (stage 3) ---------- */
+  .ion-row{display:flex; flex-direction:row-reverse; gap:26px; justify-content:center; flex-wrap:wrap; margin-top:4px;}
+  .ion-target{
+    background:var(--navy-700); border-radius:16px; padding:18px 16px;
+    display:flex; flex-direction:column; align-items:center; gap:10px; width:180px;
+  }
+  .ion-target .sym{font-size:24px; font-weight:800;}
+  .drop-slot{
+    width:64px; height:64px; border-radius:14px; border:2px dashed rgba(255,255,255,.2);
+    display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:800;
+    transition:all .2s;
+  }
+  .drop-slot.filled{border-style:solid; border-color:var(--teal); background:var(--teal-dim);}
+  .drop-slot.wrong{border-color:var(--danger); background:rgba(255,107,107,.12);}
+  .chip-source{display:flex; gap:10px; justify-content:center; margin-top:14px; flex-wrap:wrap;}
+  .chip{
+    padding:10px 16px; border-radius:12px; background:var(--navy-700);
+    border:1.5px solid rgba(255,255,255,.15); font-weight:800; font-size:16px;
+    cursor:grab; touch-action:none; user-select:none;
+  }
+  .chip.dragging{opacity:.3;}
+  .chip.ion-pos{color:var(--teal);}
+  .chip.ion-neg{color:var(--coral);}
+
+  .num-slot{
+    width:40px; height:40px; border-radius:10px; border:2px dashed rgba(255,255,255,.2);
+    display:flex; align-items:center; justify-content:center; font-weight:800; font-size:16px;
+  }
+  .num-slot.filled{border-style:solid; border-color:var(--teal); background:var(--teal-dim);}
+  .num-slot.filled.sign-pos{border-color:var(--teal); background:var(--teal-dim); color:var(--teal);}
+  .num-slot.filled.sign-neg{border-color:var(--coral); background:rgba(255,107,74,.14); color:var(--coral);}
+
+  /* ---------- Formula builder (stage 4/5) ---------- */
+  .formula-stage{display:flex; flex-direction:column; align-items:center; gap:10px; margin-top:4px; width:100%;}
+  .formula-boxes{display:flex; flex-direction:row-reverse; align-items:flex-end; gap:0; justify-content:center; width:100%;}
+  .f-box{
+    display:flex; flex-direction:column; align-items:center; gap:6px; width:clamp(84px, 26vw, 130px);
+  }
+  .f-symbol-slot{
+    width:clamp(54px, 18vw, 78px); height:clamp(54px, 18vw, 78px); border-radius:16px; border:2px dashed rgba(255,255,255,.2);
+    display:flex; align-items:center; justify-content:center; font-size:clamp(19px, 6vw, 26px); font-weight:800;
+  }
+  .f-symbol-slot.filled{border-style:solid; border-color:var(--teal); background:var(--teal-dim);}
+  .f-sub-slot{
+    width:clamp(30px, 10vw, 40px); height:clamp(30px, 10vw, 40px); border-radius:10px; border:2px dashed rgba(255,255,255,.25);
+    display:flex; align-items:center; justify-content:center; font-weight:800; font-size:clamp(12px, 3.5vw, 15px);
+    margin-top:-6px; align-self:flex-start; margin-inline-start:clamp(26px, 9vw, 44px);
+  }
+  .f-sub-slot.filled{border-style:solid; border-color:var(--coral); background:rgba(255,107,74,.14); color:var(--coral);}
+  .f-sub-slot.filled.sign-pos{border-color:var(--teal); background:var(--teal-dim); color:var(--teal);}
+  .f-sub-slot.filled.sign-neg{border-color:var(--coral); background:rgba(255,107,74,.14); color:var(--coral);}
+  .swap-arrows{font-size:clamp(16px, 5vw, 22px); color:var(--text-dim); padding:0 clamp(2px,1vw,6px) 18px; flex-shrink:0;}
+
+  .divide-btn{
+    animation:blink 1.4s ease-in-out infinite;
+  }
+  @keyframes blink{0%,100%{box-shadow:0 0 0 rgba(255,107,74,0);} 50%{box-shadow:0 0 22px rgba(255,107,74,.65); border-color:var(--coral); color:var(--coral);}}
+
+  .final-formula{
+    font-size:clamp(30px,5vw,42px); font-weight:800; letter-spacing:1px;
+    display:flex; align-items:flex-end; gap:2px;
+    direction:ltr; unicode-bidi:isolate;
+  }
+  .final-formula sub{font-size:.55em; color:var(--coral);}
+  .final-name{font-size:18px; color:var(--teal); font-weight:700; margin-top:2px;}
+
+  .badge-screen{display:flex; flex-direction:column; align-items:center; gap:12px; text-align:center; padding-top:10px;}
+  .badge-icon{
+    width:88px; height:88px; border-radius:50%; background:var(--teal-dim);
+    border:2px solid var(--teal); display:flex; align-items:center; justify-content:center;
+    font-size:38px;
+  }
+
+  /* Faheem helper */
+  #faheem-btn{
+    position:fixed; bottom:18px; left:18px; z-index:50;
+    width:52px; height:52px; border-radius:50%; background:var(--navy-800);
+    border:2px solid var(--teal); color:var(--teal); font-weight:800; font-size:13px;
+    cursor:pointer; box-shadow:0 8px 24px rgba(0,0,0,.4);
+  }
+  #faheem-panel{
+    position:fixed; bottom:80px; left:18px; z-index:50; width:min(280px, 80vw);
+    background:var(--navy-800); border:1px solid rgba(20,200,168,.4); border-radius:14px;
+    padding:14px 16px; font-size:13px; line-height:1.8; color:var(--text-dim);
+    box-shadow:0 12px 30px rgba(0,0,0,.5);
+  }
+  #faheem-panel strong{color:var(--teal); display:block; margin-bottom:6px; font-size:13.5px;}
+  #faheem-panel[hidden]{display:none;}
+
+  @media (prefers-reduced-motion: reduce){
+    .divide-btn{animation:none;}
+    .step-dot i{transition:none;}
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="panel-viewport">
+    <header>
+      <div class="utility-bar">
+        <a class="lesson-return" href="https://sites.google.com/view/fouadedulab/student/grade9/firstterm/unit1/lesson1" target="_top">← العودة إلى صفحة الدرس</a>
+        <div class="brand-mark"><b>Fouad EduLab</b> · مختبر فؤاد التعليمي</div>
+      </div>
+      <div class="title-row">
+        <h1>بناء الصيغ الكيميائية الأيونية</h1>
+        <div class="xp-badge">⚡ <span id="xp-count">0</span> XP</div>
+      </div>
+      <div class="steps" id="steps"></div>
+    </header>
+    <main id="stage-container"></main>
+    <div class="footer-nav">
+      <button class="btn secondary" id="btn-back" disabled>السابق</button>
+      <button class="btn" id="btn-next" disabled>التالي</button>
+    </div>
+  </div>
+</div>
+
+<button id="faheem-btn">فهيم</button>
+<div id="faheem-panel" hidden><strong>💡 فهيم</strong><span id="faheem-text"></span></div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ===================== Data ===================== */
+  const ELEMENTS = {
+    Na:{symbol:"Na", name:"الصوديوم", z:11, config:[2,8,1], type:"metal", valence:1},
+    Mg:{symbol:"Mg", name:"المغنيسيوم", z:12, config:[2,8,2], type:"metal", valence:2},
+    O :{symbol:"O",  name:"الأكسجين",  z:8,  config:[2,6],   type:"nonmetal", valence:2, anionName:"أكسيد"},
+    Cl:{symbol:"Cl", name:"الكلور",    z:17, config:[2,8,7], type:"nonmetal", valence:1, anionName:"كلوريد"}
+  };
+  const VALID_PAIRS = [["Na","O"],["Na","Cl"],["Mg","O"],["Mg","Cl"]];
+  const SHELL_CAPS = [2,8,8];
+
+  const FAHEEM_TIPS = [
+    "اختر عنصرين: أحدهما فلز (يفقد إلكترونات) والآخر لافلز (يكتسب إلكترونات) لتتمكن من كتابة الصيغة الكيميائية بينهما.",
+    "اسحب الإلكترونات من المجموعة السفلية إلى المستويات، وابدأ دائمًا بالمستوى الأقرب للنواة حتى يمتلئ.",
+    "الفلز يفقد إلكترونات المستوى الأخير فيصبح أيونًا موجبًا، واللافلز يكتسب إلكترونات في مستواه الأخير فيصبح أيونًا سالبًا.",
+    "بعد تحديد التكافؤ، بادل الأرقام بين العنصرين — تكافؤ كل عنصر يصبح دليلًا سفليًا للعنصر الآخر.",
+    "إذا كان الرقمان قابلين للقسمة على عدد مشترك، بسّطهما دائمًا للحصول على أبسط صيغة كيميائية."
+  ];
+
+  /* ===================== State ===================== */
+  const state = {
+    stage: 1,
+    totalStages: 5,
+    xp: 0,
+    metal: null,
+    nonmetal: null,
+    picks: [],
+    shellFill: {},     // {Na:[2,8,1], ...} progressive
+    ionAssigned: {},   // {Na:'pos', O:'neg'}
+    valenceAssigned: {}, // {Na:1, O:2}
+    subBeforeSwap: {},   // element -> its own valence shown under itself before swap
+    subAfterSwap: {},    // element -> subscript received from the other element
+    simplified: false
+  };
+
+  const stageContainer = document.getElementById("stage-container");
+  const btnNext = document.getElementById("btn-next");
+  const btnBack = document.getElementById("btn-back");
+  const xpCountEl = document.getElementById("xp-count");
+  const stepsEl = document.getElementById("steps");
+
+  /* ===================== Audio (Web Audio API, no external files) ===================== */
+  let actx = null;
+  function ctx(){ if(!actx){ actx = new (window.AudioContext||window.webkitAudioContext)(); } return actx; }
+  function tone(freq, dur, type, vol, delay){
+    try{
+      const c = ctx();
+      const o = c.createOscillator();
+      const g = c.createGain();
+      o.type = type||"sine";
+      o.frequency.value = freq;
+      g.gain.value = 0;
+      o.connect(g); g.connect(c.destination);
+      const t0 = c.currentTime + (delay||0);
+      g.gain.linearRampToValueAtTime((vol||0.06), t0+0.015);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0+(dur||0.2));
+      o.start(t0); o.stop(t0+(dur||0.2)+0.05);
+    }catch(e){}
+  }
+  function sndTick(){ tone(760,0.06,"sine",0.05,0); }
+  function sndSnap(){ tone(420,0.09,"triangle",0.07,0); tone(640,0.09,"triangle",0.05,0.03); }
+  function sndError(){ tone(180,0.18,"sawtooth",0.05,0); }
+  function sndChime(){ [523,659,784,1046].forEach((f,i)=>tone(f,0.35,"sine",0.045,i*0.09)); }
+
+  /* ===================== Helpers ===================== */
+  function gcd(a,b){ return b===0 ? a : gcd(b, a%b); }
+  function addXP(n){
+    state.xp += n; xpCountEl.textContent = state.xp;
+  }
+  function renderSteps(){
+    stepsEl.innerHTML = "";
+    const atFinal = state.stage === state.totalStages;
+    for(let i=1;i<=state.totalStages;i++){
+      const d = document.createElement("div");
+      const isDone = i < state.stage || (i===state.stage && atFinal);
+      const isCurrent = i===state.stage && !atFinal;
+      d.className = "step-dot" + (isDone?" done":"") + (isCurrent?" current":"");
+      d.innerHTML = "<i></i>";
+      stepsEl.appendChild(d);
+    }
+  }
+  function setNextEnabled(v){ btnNext.disabled = !v; }
+  function faheemTip(){
+    document.getElementById("faheem-text").textContent = FAHEEM_TIPS[state.stage-1] || "";
+  }
+
+  /* Generic pointer-drag helper (mouse + touch), transform-based, deferred drop logic */
+  function makeDraggable(el, opts){
+    let startX, startY, offX=0, offY=0, dragging=false;
+    el.style.touchAction = "none";
+    el.addEventListener("pointerdown", (e)=>{
+      if(el.dataset.locked==="1") return;
+      dragging = true;
+      el.setPointerCapture(e.pointerId);
+      el.classList.add("dragging");
+      startX = e.clientX; startY = e.clientY;
+      const onMove = (ev)=>{
+        if(!dragging) return;
+        offX = ev.clientX - startX; offY = ev.clientY - startY;
+        el.style.transform = `translate(${offX}px, ${offY}px)`;
+        el.style.zIndex = 999;
+      };
+      const onUp = (ev)=>{
+        dragging = false;
+        el.classList.remove("dragging");
+        el.releasePointerCapture(e.pointerId);
+        window.removeEventListener("pointermove", onMove);
+        window.removeEventListener("pointerup", onUp);
+        const rect = el.getBoundingClientRect();
+        const cx = rect.left + rect.width/2, cy = rect.top + rect.height/2;
+        el.style.transform = "";
+        el.style.zIndex = "";
+        // find drop target under pointer center (deferred, after resetting transform)
+        let target = null;
+        if(opts.targets){
+          for(const t of opts.targets()){
+            const r = t.getBoundingClientRect();
+            if(cx>=r.left && cx<=r.right && cy>=r.top && cy<=r.bottom){ target = t; break; }
+          }
+        }
+        opts.onDrop && opts.onDrop(target, el);
+      };
+      window.addEventListener("pointermove", onMove);
+      window.addEventListener("pointerup", onUp);
+    });
+  }
+
+  /* ===================== STAGE 1: Element selection ===================== */
+  function renderStage1(){
+    state.stage = 1; renderSteps(); setNextEnabled(false); faheemTip();
+    stageContainer.innerHTML = `
+      <div class="stage-label">المرحلة ١ من ٥ — الاستكشاف</div>
+      <div class="stage-title">اختر عنصرين لبناء الصيغة الكيميائية</div>
+      <div class="stage-desc">انقر على عنصرين من البطاقات أدناه. لكتابة الصيغة الكيميائية نحتاج فلزًا واحدًا (يفقد إلكترونات) ولافلزًا واحدًا (يكتسب إلكترونات).</div>
+      <div class="element-grid" id="el-grid"></div>
+      <div id="invalid-area"></div>
+    `;
+    const grid = document.getElementById("el-grid");
+    Object.keys(ELEMENTS).forEach(key=>{
+      const el = ELEMENTS[key];
+      const card = document.createElement("div");
+      card.className = "el-card";
+      card.dataset.key = key;
+      card.innerHTML = `<span class="z">${el.z}</span><span class="sym">${el.symbol}</span><span class="nm">${el.name}</span>`;
+      card.addEventListener("click", ()=>onElementClick(key, card));
+      grid.appendChild(card);
+    });
+  }
+
+  function onElementClick(key, cardEl){
+    document.getElementById("invalid-area").innerHTML = "";
+    const idx = state.picks.indexOf(key);
+    if(idx>-1){
+      state.picks.splice(idx,1);
+      cardEl.classList.remove("selected");
+      return;
+    }
+    if(state.picks.length>=2) return;
+    state.picks.push(key);
+    cardEl.classList.add("selected");
+    sndTick();
+    if(state.picks.length===2){
+      validatePick();
+    }
+  }
+
+  function validatePick(){
+    const [a,b] = state.picks;
+    const ea = ELEMENTS[a], eb = ELEMENTS[b];
+    const isValid = VALID_PAIRS.some(p => (p[0]===a&&p[1]===b)||(p[0]===b&&p[1]===a));
+    if(!isValid){
+      sndError();
+      let msg = "";
+      if(ea.type===eb.type && ea.type==="metal"){
+        msg = `${ea.name} و${eb.name} كلاهما فلزّ — كلاهما يميل لفقد الإلكترونات، ولا يوجد طرف يستقبلها، لذا لا يمكن كتابة صيغة كيميائية بينهما بهذه الطريقة. جرّب زوجًا آخر.`;
+      } else if(ea.type===eb.type && ea.type==="nonmetal"){
+        msg = `${ea.name} و${eb.name} كلاهما لافلزّ — كلاهما يميل لاكتساب الإلكترونات، فلا يمكن كتابة صيغة كيميائية بينهما بهذه الطريقة. جرّب زوجًا آخر.`;
+      } else {
+        msg = "هذا الاقتران غير صالح لبناء صيغة كيميائية. جرّب زوجًا آخر.";
+      }
+      document.getElementById("invalid-area").innerHTML = `<div class="invalid-msg">${msg}</div>`;
+      setTimeout(()=>{
+        state.picks.forEach(k=>{
+          const c = document.querySelector(`.el-card[data-key="${k}"]`);
+          if(c) c.classList.remove("selected");
+        });
+        state.picks = [];
+      }, 2200);
+      return;
+    }
+    state.metal = ea.type==="metal" ? a : b;
+    state.nonmetal = ea.type==="nonmetal" ? a : b;
+    sndSnap();
+    addXP(10);
+    setNextEnabled(true);
+  }
+
+  /* ===================== STAGE 2: Electron configuration ===================== */
+  function renderStage2(){
+    state.stage = 2; renderSteps(); setNextEnabled(false); faheemTip();
+    stageContainer.innerHTML = `
+      <div class="stage-label">المرحلة ٢ من ٥ — التوزيع الإلكتروني</div>
+      <div class="stage-title">وزّع الإلكترونات على مستويات الطاقة</div>
+      <div class="stage-desc">انقر على كل إلكترون لوضعه تلقائيًا في مستوى الطاقة الصحيح، بدءًا من المستوى الأقرب للنواة.</div>
+      <div class="atoms-row" id="atoms-row"></div>
+    `;
+    const row = document.getElementById("atoms-row");
+    [state.metal, state.nonmetal].forEach(key=>{
+      row.appendChild(buildAtomBox(key));
+    });
+    checkStage2Complete();
+  }
+
+  function buildAtomBox(key){
+    const el = ELEMENTS[key];
+    state.shellFill[key] = [0,0,0];
+    const box = document.createElement("div");
+    box.className = "atom-box";
+    box.innerHTML = `
+      <h3>${el.name} (${el.symbol})</h3>
+      <svg class="shell-svg" viewBox="0 0 200 200" data-key="${key}">
+        <circle class="shell-ring" data-shell="0" cx="100" cy="100" r="30"/>
+        <circle class="shell-ring" data-shell="1" cx="100" cy="100" r="55"/>
+        <circle class="shell-ring" data-shell="2" cx="100" cy="100" r="80"/>
+        <text class="nucleus-label" x="100" y="104" text-anchor="middle">${el.symbol}</text>
+      </svg>
+      <div class="shell-hint" data-hint="${key}">انقر على الإلكترونات بالترتيب — التالي: المستوى ١</div>
+      <div class="valence-note" data-valnote="${key}"></div>
+      <div class="pool" data-pool="${key}"></div>
+    `;
+    const pool = box.querySelector(`[data-pool="${key}"]`);
+    for(let i=0;i<el.z;i++){
+      const dot = document.createElement("div");
+      dot.className = "electron";
+      dot.dataset.owner = key;
+      pool.appendChild(dot);
+      wireElectron(dot, key, box);
+    }
+    return box;
+  }
+
+  function wireElectron(dot, key, box){
+    dot.addEventListener("click", ()=>{
+      if(dot.dataset.placed==="1") return;
+      const fill = state.shellFill[key];
+      // find the next correct shell automatically (inner-to-outer, always accurate)
+      let shellIdx = -1;
+      for(let s=0; s<SHELL_CAPS.length; s++){
+        if(fill[s] < SHELL_CAPS[s]){ shellIdx = s; break; }
+      }
+      if(shellIdx === -1) return;
+      dot.dataset.placed = "1";
+      fill[shellIdx]++;
+      dot.remove();
+      placeElectronDot(box, key, shellIdx, fill[shellIdx]);
+      sndTick();
+      updateShellVisual(box, key);
+      updateFillHint(key, box);
+      checkAtomComplete(key, box);
+      checkStage2Complete();
+    });
+  }
+
+  function updateFillHint(key, box){
+    const fill = state.shellFill[key];
+    const total = fill.reduce((a,b)=>a+b,0);
+    if(total >= ELEMENTS[key].z) return; // checkAtomComplete will set the final message
+    let next = -1;
+    for(let s=0; s<SHELL_CAPS.length; s++){ if(fill[s] < SHELL_CAPS[s]){ next = s; break; } }
+    const hint = box.querySelector(`[data-hint="${key}"]`);
+    if(hint && next>-1) hint.textContent = `التالي: المستوى ${next+1}`;
+  }
+
+  function placeElectronDot(box, key, shellIdx, countInShell){
+    const svg = box.querySelector("svg");
+    const radii = [30,55,80];
+    const r = radii[shellIdx];
+    const cap = SHELL_CAPS[shellIdx];
+    const angle = (countInShell / Math.max(cap, ELEMENTS[key].config[shellIdx]||1)) * Math.PI*2 - Math.PI/2;
+    const cx = 100 + r*Math.cos(angle);
+    const cy = 100 + r*Math.sin(angle);
+    const isOuter = shellIdx === lastNonZeroShell(ELEMENTS[key].config);
+    const c = document.createElementNS("http://www.w3.org/2000/svg","circle");
+    c.setAttribute("cx", cx); c.setAttribute("cy", cy); c.setAttribute("r", 5);
+    c.setAttribute("class", "e-dot" + (isOuter?" valence":""));
+    c.dataset.shell = shellIdx;
+    svg.appendChild(c);
+  }
+
+  function lastNonZeroShell(config){ return config.length-1; }
+
+  function updateShellVisual(box, key){
+    const fill = state.shellFill[key];
+    box.querySelectorAll(".shell-ring").forEach(ring=>{
+      const s = parseInt(ring.dataset.shell,10);
+      ring.classList.remove("ready","full");
+      if(fill[s] >= SHELL_CAPS[s] && fill[s]>0) ring.classList.add("full");
+      else if(s===0 || fill[s-1]>=SHELL_CAPS[s-1]) ring.classList.add("ready");
+    });
+  }
+
+  function checkAtomComplete(key, box){
+    const el = ELEMENTS[key];
+    const totalPlaced = state.shellFill[key].reduce((a,b)=>a+b,0);
+    if(totalPlaced === el.z){
+      const hint = box.querySelector(`[data-hint="${key}"]`);
+      hint.textContent = "✓ اكتمل التوزيع الإلكتروني";
+      hint.style.color = "var(--teal)";
+      const valNote = box.querySelector(`[data-valnote="${key}"]`);
+      const outerCount = el.config[el.config.length-1];
+      if(el.type==="metal"){
+        valNote.textContent = `المستوى الأخير: ${outerCount} إلكترونات (يمكن فقدها)`;
+      } else {
+        valNote.textContent = `المستوى الأخير: ${outerCount} إلكترونات (يمكن اكتساب إلكترونات إضافية)`;
+      }
+    }
+  }
+
+  function checkStage2Complete(){
+    const mDone = state.shellFill[state.metal] && state.shellFill[state.metal].reduce((a,b)=>a+b,0)===ELEMENTS[state.metal].z;
+    const nDone = state.shellFill[state.nonmetal] && state.shellFill[state.nonmetal].reduce((a,b)=>a+b,0)===ELEMENTS[state.nonmetal].z;
+    if(mDone && nDone){
+      sndSnap(); addXP(20); setNextEnabled(true);
+    }
+  }
+
+  /* ===================== STAGE 3: Ion / valence assignment ===================== */
+  function renderStage3(){
+    state.stage = 3; renderSteps(); setNextEnabled(false); faheemTip();
+    stageContainer.innerHTML = `
+      <div class="stage-label">المرحلة ٣ من ٥ — تحديد التكافؤ</div>
+      <div class="stage-title">حدّد نوع الأيون وقيمة التكافؤ</div>
+      <div class="stage-desc">اسحب أيقونة الأيون المناسبة (موجب/سالب) فوق رمز كل عنصر، ثم اسحب رقم التكافؤ الصحيح أسفل كل رمز.</div>
+      <div class="ion-row" id="ion-row"></div>
+      <div class="chip-source" id="ion-chips">
+        <div class="chip ion-pos" draggable="false">⊕ أيون موجب</div>
+        <div class="chip ion-neg" draggable="false">⊖ أيون سالب</div>
+      </div>
+      <div class="chip-source" id="num-chips">
+        <div class="chip" data-num="1">١</div>
+        <div class="chip" data-num="2">٢</div>
+        <div class="chip" data-num="3">٣</div>
+      </div>
+    `;
+    const row = document.getElementById("ion-row");
+    [state.metal, state.nonmetal].forEach(key=>{
+      const el = ELEMENTS[key];
+      const box = document.createElement("div");
+      box.className = "ion-target";
+      box.innerHTML = `
+        <span class="sym">${el.symbol}</span>
+        <div class="drop-slot" data-ionslot="${key}">؟</div>
+        <div class="num-slot" data-numslot="${key}">؟</div>
+      `;
+      row.appendChild(box);
+    });
+    wireIonChips();
+    wireNumChips();
+  }
+
+  function wireIonChips(){
+    document.querySelectorAll("#ion-chips .chip").forEach(chip=>{
+      makeDraggable(chip, {
+        targets: ()=>Array.from(document.querySelectorAll(".drop-slot")),
+        onDrop:(target)=>{
+          if(!target) return;
+          const key = target.dataset.ionslot;
+          const el = ELEMENTS[key];
+          const isPos = chip.classList.contains("ion-pos");
+          const correct = (el.type==="metal" && isPos) || (el.type==="nonmetal" && !isPos);
+          if(correct){
+            target.textContent = isPos ? "⊕" : "⊖";
+            target.classList.add("filled");
+            target.classList.remove("wrong");
+            state.ionAssigned[key] = isPos ? "pos" : "neg";
+            sndSnap();
+            checkStage3Complete();
+          } else {
+            target.classList.add("wrong");
+            sndError();
+            setTimeout(()=>target.classList.remove("wrong"),700);
+          }
+        }
+      });
+    });
+  }
+
+  function wireNumChips(){
+    document.querySelectorAll("#num-chips .chip").forEach(chip=>{
+      makeDraggable(chip, {
+        targets: ()=>Array.from(document.querySelectorAll(".num-slot")),
+        onDrop:(target)=>{
+          if(!target) return;
+          const key = target.dataset.numslot;
+          const num = parseInt(chip.dataset.num,10);
+          const correct = ELEMENTS[key].valence === num;
+          if(correct){
+            const isMetal = ELEMENTS[key].type === "metal";
+            target.textContent = (isMetal ? "+" : "−") + chip.textContent;
+            target.classList.add("filled", isMetal ? "sign-pos" : "sign-neg");
+            state.valenceAssigned[key] = num;
+            sndSnap();
+            checkStage3Complete();
+          } else {
+            sndError();
+            target.style.borderColor = "var(--danger)";
+            setTimeout(()=>{ target.style.borderColor=""; }, 700);
+          }
+        }
+      });
+    });
+  }
+
+  function checkStage3Complete(){
+    const keys = [state.metal, state.nonmetal];
+    const ionsDone = keys.every(k=>state.ionAssigned[k]);
+    const valsDone = keys.every(k=>state.valenceAssigned[k]);
+    if(ionsDone && valsDone){
+      addXP(20);
+      setNextEnabled(true);
+    }
+  }
+
+  /* ===================== STAGE 4 + 5: Formula building, swap, simplify ===================== */
+  function renderStage4(){
+    state.stage = 4; renderSteps(); setNextEnabled(false); faheemTip();
+    const m = ELEMENTS[state.metal], n = ELEMENTS[state.nonmetal];
+    stageContainer.innerHTML = `
+      <div class="stage-label">المرحلة ٤ من ٥ — بناء الصيغة (آلية المقص)</div>
+      <div class="stage-title">اسحب الرموز ثم بادل قيم التكافؤ</div>
+      <div class="stage-desc">اسحب رمز الفلز إلى الصندوق الأيسر ورمز اللافلز إلى الصندوق الأيمن. بعدها اسحب رقم تكافؤ كل عنصر ليصبح دليلًا سفليًا للعنصر الآخر.</div>
+      <div class="formula-stage">
+        <div class="chip-source" id="symbol-chips">
+          <div class="chip" data-role="metal" draggable="false">${m.symbol}</div>
+          <div class="chip" data-role="nonmetal" draggable="false">${n.symbol}</div>
+        </div>
+        <div class="formula-boxes">
+          <div class="f-box">
+            <div class="f-symbol-slot" data-fsym="metal">؟</div>
+            <div class="f-sub-slot" data-fsub="metal">؟</div>
+          </div>
+          <div class="swap-arrows">⇄</div>
+          <div class="f-box">
+            <div class="f-symbol-slot" data-fsym="nonmetal">؟</div>
+            <div class="f-sub-slot" data-fsub="nonmetal">؟</div>
+          </div>
+        </div>
+        <div class="chip-source" id="valence-chips"></div>
+        <div id="formula-result"></div>
+      </div>
+    `;
+    wireSymbolChips();
+  }
+
+  function wireSymbolChips(){
+    document.querySelectorAll("#symbol-chips .chip").forEach(chip=>{
+      makeDraggable(chip, {
+        targets: ()=>Array.from(document.querySelectorAll(".f-symbol-slot")),
+        onDrop:(target)=>{
+          if(!target) return;
+          const role = chip.dataset.role;
+          const slotRole = target.dataset.fsym;
+          if(role !== slotRole){
+            sndError();
+            return;
+          }
+          target.textContent = chip.textContent;
+          target.classList.add("filled");
+          chip.dataset.locked = "1";
+          chip.style.opacity = ".3";
+          sndSnap();
+          checkSymbolsPlaced();
+        }
+      });
+    });
+  }
+
+  function checkSymbolsPlaced(){
+    const metalDone = document.querySelector('.f-symbol-slot[data-fsym="metal"]').classList.contains("filled");
+    const nonDone = document.querySelector('.f-symbol-slot[data-fsym="nonmetal"]').classList.contains("filled");
+    if(metalDone && nonDone){
+      addXP(10);
+      renderValenceChipsForSwap();
+    }
+  }
+
+  function renderValenceChipsForSwap(){
+    const holder = document.getElementById("valence-chips");
+    const mVal = state.valenceAssigned[state.metal];
+    const nVal = state.valenceAssigned[state.nonmetal];
+    holder.innerHTML = `
+      <div class="chip ion-pos" data-owner="metal" data-value="${mVal}">+${mVal}</div>
+      <div class="chip ion-neg" data-owner="nonmetal" data-value="${nVal}">−${nVal}</div>
+    `;
+    document.querySelectorAll("#valence-chips .chip").forEach(chip=>{
+      makeDraggable(chip, {
+        targets: ()=>Array.from(document.querySelectorAll(".f-sub-slot")),
+        onDrop:(target)=>{
+          if(!target) return;
+          const owner = chip.dataset.owner;
+          const slotOwner = target.dataset.fsub;
+          // criss-cross rule: owner's valence must land under the OTHER element
+          if(owner === slotOwner){
+            sndError();
+            return;
+          }
+          target.textContent = chip.textContent;
+          target.classList.add("filled", owner==="metal" ? "sign-pos" : "sign-neg");
+          chip.dataset.locked = "1";
+          chip.style.opacity = ".3";
+          state.subAfterSwap[slotOwner] = parseInt(chip.dataset.value,10);
+          sndSnap();
+          checkSwapComplete();
+        }
+      });
+    });
+  }
+
+  function checkSwapComplete(){
+    if(state.subAfterSwap.metal && state.subAfterSwap.nonmetal){
+      addXP(20);
+      showFormulaResult();
+    }
+  }
+
+  function showFormulaResult(){
+    const subM = state.subAfterSwap.metal;
+    const subN = state.subAfterSwap.nonmetal;
+    const g = gcd(subM, subN);
+    const resultDiv = document.getElementById("formula-result");
+    if(g > 1){
+      resultDiv.innerHTML = `
+        <div class="stage-desc" style="text-align:center; margin-top:6px;">الرقمان (${subM}, ${subN}) لهما قاسم مشترك — يجب تبسيطهما.</div>
+        <div style="display:flex; justify-content:center; margin-top:10px;">
+          <button class="btn divide-btn" id="btn-divide">÷ قسّ التكافؤ على ${g}</button>
+        </div>
+      `;
+      document.getElementById("btn-divide").addEventListener("click", ()=>{
+        state.simplified = true;
+        addXP(15);
+        finalizeFormula(subM/g, subN/g);
+      });
+    } else {
+      resultDiv.innerHTML = `<div class="stage-desc" style="text-align:center; margin-top:6px;">الرقمان (${subM}, ${subN}) لا يقبلان التبسيط — هذه أبسط صورة للصيغة.</div>`;
+      finalizeFormula(subM, subN);
+    }
+  }
+
+  function finalizeFormula(subM, subN){
+    const m = ELEMENTS[state.metal], n = ELEMENTS[state.nonmetal];
+    const mSub = subM===1 ? "" : toArabicNumberSub(subM);
+    const nSub = subN===1 ? "" : toArabicNumberSub(subN);
+    const compoundName = `${n.anionName} ${m.name}`;
+    const resultDiv = document.getElementById("formula-result");
+    resultDiv.innerHTML += `
+      <div style="display:flex; flex-direction:column; align-items:center; gap:6px; margin-top:16px;">
+        <div class="final-formula">${m.symbol}${mSub?`<sub>${mSub}</sub>`:""}${n.symbol}${nSub?`<sub>${nSub}</sub>`:""}</div>
+        <div class="final-name">${compoundName}</div>
+      </div>
+    `;
+    sndChime();
+    addXP(15);
+    state.finalMetalSub = subM;
+    state.finalNonSub = subN;
+    setNextEnabled(true);
+  }
+
+  function toArabicNumberSub(n){
+    // keep simple integers (2 or 3 max in this dataset)
+    return String(n);
+  }
+
+  /* ===================== STAGE 5: Badge / completion ===================== */
+  function renderStage5(){
+    state.stage = 5; renderSteps(); setNextEnabled(true); faheemTip();
+    const m = ELEMENTS[state.metal], n = ELEMENTS[state.nonmetal];
+    const mSub = state.finalMetalSub===1?"":state.finalMetalSub;
+    const nSub = state.finalNonSub===1?"":state.finalNonSub;
+    stageContainer.innerHTML = `
+      <div class="stage-label">المرحلة ٥ من ٥ — الإنجاز</div>
+      <div class="badge-screen">
+        <div class="badge-icon">🏆</div>
+        <div class="stage-title">أحسنت! لقد بنيت الصيغة بنجاح</div>
+        <div class="final-formula">${m.symbol}${mSub?`<sub>${mSub}</sub>`:""}${n.symbol}${nSub?`<sub>${nSub}</sub>`:""}</div>
+        <div class="final-name">${n.anionName} ${m.name}</div>
+        <div class="stage-desc" style="text-align:center;">رصيدك الحالي: <strong style="color:var(--teal)">${state.xp} XP</strong></div>
+        <button class="btn" id="btn-retry" style="margin-top:8px;">جرّب زوجًا آخر من العناصر</button>
+      </div>
+    `;
+    document.getElementById("btn-retry").addEventListener("click", resetForNewPair);
+  }
+
+  function resetForNewPair(){
+    state.metal = null; state.nonmetal = null; state.picks = [];
+    state.shellFill = {}; state.ionAssigned = {}; state.valenceAssigned = {};
+    state.subBeforeSwap = {}; state.subAfterSwap = {}; state.simplified = false;
+    renderStage1();
+  }
+
+  /* ===================== Navigation ===================== */
+  const stageRenderers = [null, renderStage1, renderStage2, renderStage3, renderStage4, renderStage5];
+
+  btnNext.addEventListener("click", ()=>{
+    if(state.stage < state.totalStages){
+      state.stage++;
+      btnBack.disabled = false;
+      stageRenderers[state.stage]();
+      if(state.stage===state.totalStages) btnNext.disabled = true;
+    }
+  });
+  btnBack.addEventListener("click", ()=>{
+    if(state.stage>1){
+      state.stage--;
+      if(state.stage===1) btnBack.disabled = true;
+      stageRenderers[state.stage]();
+    }
+  });
+
+  /* Faheem panel */
+  const faheemBtn = document.getElementById("faheem-btn");
+  const faheemPanel = document.getElementById("faheem-panel");
+  faheemBtn.addEventListener("click", ()=>{
+    faheemTip();
+    faheemPanel.hidden = !faheemPanel.hidden;
+  });
+
+  /* Init */
+  renderStage1();
+})();
+</script>
+</body>
+</html>
